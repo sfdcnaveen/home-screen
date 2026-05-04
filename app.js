@@ -3,7 +3,6 @@ const searchForm = document.querySelector("#search-form");
 const searchInput = document.querySelector("#search-input");
 const searchHintEl = document.querySelector("#search-hint");
 const quickLinksContainer = document.querySelector(".quick-links");
-let quickLinks = [...document.querySelectorAll(".quick-link")];
 
 const currentEngineBtn = document.querySelector("#current-engine");
 const engineDropdown = document.querySelector("#engine-dropdown");
@@ -40,7 +39,7 @@ const SUGGESTIONS = [
   { label: "YouTube", url: "https://youtube.com" },
   { label: "LinkedIn", url: "https://linkedin.com" },
   { label: "Twitter", url: "https://twitter.com" },
-  { label: "Instagram", url: "https://instagram.com" }
+  { label: "Instagram", url: "https://instagram.com" },
 ];
 
 function getProfileName() {
@@ -86,7 +85,7 @@ function createShortcutElement(label, url) {
   a.className = "quick-link";
   a.href = url;
   a.dataset.label = label;
-  
+
   const icon = getFavicon(url);
   if (icon) {
     const img = document.createElement("img");
@@ -119,8 +118,12 @@ function createShortcutElement(label, url) {
 }
 
 function updateShortcutVisibility() {
-  const hiddenShortcuts = JSON.parse(localStorage.getItem("hiddenShortcuts") || "[]");
-  const customShortcuts = JSON.parse(localStorage.getItem("customShortcuts") || "[]");
+  const hiddenShortcuts = JSON.parse(
+    localStorage.getItem("hiddenShortcuts") || "[]",
+  );
+  const customShortcuts = JSON.parse(
+    localStorage.getItem("customShortcuts") || "[]",
+  );
   const onboardedUrls = JSON.parse(localStorage.getItem("customUrls") || "{}");
 
   // Base links (hardcoded in HTML originally, but we manage them via state now)
@@ -134,20 +137,22 @@ function updateShortcutVisibility() {
     { label: "GitHub", url: "https://github.com" },
     { label: "Vercel", url: "https://vercel.com" },
     { label: "Pinterest", url: "https://www.pinterest.com" },
-    { label: "Salesforce", url: "https://login.salesforce.com" }
+    { label: "Salesforce", url: "https://login.salesforce.com" },
   ];
-  
+
   // Add onboarded if exists
   const onboarded = [];
-  if (onboardedUrls.url1) onboarded.push({ label: "Custom 1", url: onboardedUrls.url1 });
-  if (onboardedUrls.url2) onboarded.push({ label: "Custom 2", url: onboardedUrls.url2 });
+  if (onboardedUrls.url1)
+    onboarded.push({ label: "Custom 1", url: onboardedUrls.url1 });
+  if (onboardedUrls.url2)
+    onboarded.push({ label: "Custom 2", url: onboardedUrls.url2 });
 
   const allPossible = [...defaultLinks, ...onboarded, ...customShortcuts];
-  
+
   // Dedup by label
   const uniqueLinks = [];
   const labels = new Set();
-  allPossible.forEach(l => {
+  allPossible.forEach((l) => {
     if (!labels.has(l.label)) {
       uniqueLinks.push(l);
       labels.add(l.label);
@@ -158,7 +163,7 @@ function updateShortcutVisibility() {
   sidebarList.innerHTML = "";
   suggestionsList.innerHTML = "";
 
-  uniqueLinks.forEach(link => {
+  uniqueLinks.forEach((link) => {
     const isHidden = hiddenShortcuts.includes(link.label);
     if (isHidden) {
       addSidebarItem(link, sidebarList, true);
@@ -169,7 +174,7 @@ function updateShortcutVisibility() {
   });
 
   // Render Suggestions
-  SUGGESTIONS.forEach(s => {
+  SUGGESTIONS.forEach((s) => {
     if (!labels.has(s.label)) {
       addSidebarItem(s, suggestionsList, false);
     }
@@ -180,7 +185,7 @@ function addSidebarItem(link, container, isHidden) {
   const item = document.createElement("div");
   item.className = "sidebar-item";
   const icon = getFavicon(link.url);
-  
+
   item.innerHTML = `
     <div class="info">
       ${icon ? `<img src="${icon}" alt="">` : `<span class="brand">${link.label[0]}</span>`}
@@ -188,7 +193,7 @@ function addSidebarItem(link, container, isHidden) {
     </div>
     <button class="add-shortcut" data-label="${link.label}" data-url="${link.url}">+</button>
   `;
-  
+
   item.querySelector(".add-shortcut").addEventListener("click", () => {
     if (isHidden) {
       showShortcut(link.label);
@@ -196,7 +201,7 @@ function addSidebarItem(link, container, isHidden) {
       addCustomShortcut(link.label, link.url);
     }
   });
-  
+
   container.appendChild(item);
 }
 
@@ -211,7 +216,7 @@ function hideShortcut(label) {
 
 function showShortcut(label) {
   let hidden = JSON.parse(localStorage.getItem("hiddenShortcuts") || "[]");
-  hidden = hidden.filter(l => l !== label);
+  hidden = hidden.filter((l) => l !== label);
   localStorage.setItem("hiddenShortcuts", JSON.stringify(hidden));
   updateShortcutVisibility();
 }
@@ -246,7 +251,10 @@ document.querySelector("#skip-urls").addEventListener("click", () => {
 });
 
 document.querySelector("#save-onboarding").addEventListener("click", () => {
-  const urls = { url1: customUrl1Input.value.trim(), url2: customUrl2Input.value.trim() };
+  const urls = {
+    url1: customUrl1Input.value.trim(),
+    url2: customUrl2Input.value.trim(),
+  };
   localStorage.setItem("customUrls", JSON.stringify(urls));
   onboardingOverlay.classList.remove("active");
   updateGreeting();
@@ -254,8 +262,12 @@ document.querySelector("#save-onboarding").addEventListener("click", () => {
 });
 
 // Modal Logic
-addCustomBtn.addEventListener("click", () => customModal.classList.add("active"));
-cancelModalBtn.addEventListener("click", () => customModal.classList.remove("active"));
+addCustomBtn.addEventListener("click", () =>
+  customModal.classList.add("active"),
+);
+cancelModalBtn.addEventListener("click", () =>
+  customModal.classList.remove("active"),
+);
 confirmModalBtn.addEventListener("click", () => {
   const label = newLinkLabel.value.trim();
   const url = newLinkUrl.value.trim();
@@ -272,17 +284,53 @@ searchForm.addEventListener("submit", (e) => {
   e.preventDefault();
   const query = searchInput.value.trim();
   if (!query) return;
-  const isUrl = /^https?:\/\//.test(query) || (query.includes(".") && !query.includes(" "));
-  window.location.assign(isUrl ? (query.startsWith("http") ? query : `https://${query}`) : `${currentEngineUrl}${encodeURIComponent(query)}`);
+  const isUrl =
+    /^https?:\/\//.test(query) || (query.includes(".") && !query.includes(" "));
+  window.location.assign(
+    isUrl
+      ? query.startsWith("http")
+        ? query
+        : `https://${query}`
+      : `${currentEngineUrl}${encodeURIComponent(query)}`,
+  );
 });
 
-currentEngineBtn.addEventListener("click", () => engineDropdown.classList.toggle("active"));
-engineOptions.forEach(opt => opt.addEventListener("click", () => {
-  currentEngineUrl = opt.dataset.url;
-  currentEngineBtn.textContent = opt.textContent[0];
+currentEngineBtn.addEventListener("click", () => {
+  engineDropdown.classList.toggle("active");
+  document.body.classList.toggle(
+    "dropdown-active",
+    engineDropdown.classList.contains("active"),
+  );
+});
+
+engineOptions.forEach((opt) =>
+  opt.addEventListener("click", () => {
+    const icon = opt.querySelector(".engine-icon").textContent;
+    currentEngineUrl = opt.dataset.url;
+    currentEngineBtn.textContent = icon;
+
+    // Close the dropdown
+    engineDropdown.classList.remove("active");
+    engineDropdown.classList.add("force-hidden");
+    document.body.classList.remove("dropdown-active");
+
+    localStorage.setItem("preferredSearchEngine", opt.dataset.engine);
+  }),
+);
+
+const engineSelector = document.querySelector(".engine-selector");
+
+// Show and lock background on hover
+engineSelector.addEventListener("mouseenter", () => {
+  document.body.classList.add("dropdown-active");
+  engineDropdown.classList.remove("force-hidden");
+});
+
+// Close and unlock background when mouse leaves
+engineSelector.addEventListener("mouseleave", () => {
+  document.body.classList.remove("dropdown-active");
   engineDropdown.classList.remove("active");
-  localStorage.setItem("preferredSearchEngine", opt.dataset.engine);
-}));
+});
 
 editModeToggle.addEventListener("click", toggleEditMode);
 closeSidebarBtn.addEventListener("click", toggleEditMode);
@@ -291,10 +339,11 @@ saveLayoutBtn.addEventListener("click", toggleEditMode);
 // Init
 const savedEngine = localStorage.getItem("preferredSearchEngine");
 if (savedEngine) {
-  const opt = engineOptions.find(o => o.dataset.engine === savedEngine);
+  const opt = engineOptions.find((o) => o.dataset.engine === savedEngine);
   if (opt) {
     currentEngineUrl = opt.dataset.url;
-    currentEngineBtn.textContent = opt.textContent[0];
+    currentEngineBtn.textContent =
+      opt.querySelector(".engine-icon").textContent;
   }
 }
 

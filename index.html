@@ -8,23 +8,36 @@
       content="A personal browser homepage for fast navigation across AI tools, developer dashboards, and inspiration."
     />
     <title>Home Screen</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bitcount+Grid+Double:wght@300..700&family=Bitcount+Ink:wght@300..700&display=swap" rel="stylesheet">
-    <link rel="icon" type="image/png" href="/Users/nn/.gemini/antigravity/brain/c2bc9a56-7e2e-4820-a972-e1d7c3e985cf/home_screen_favicon_1777870330093.png">
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bitcount+Grid+Double:wght@300..700&family=Bitcount+Ink:wght@300..700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" type="image/png" href="/favicon.png" />
     <link rel="stylesheet" href="/styles.css" />
   </head>
   <body>
-    <button id="edit-mode-toggle" class="edit-mode-toggle" aria-label="Toggle edit mode">
+    <button
+      id="edit-mode-toggle"
+      class="edit-mode-toggle"
+      aria-label="Toggle edit mode"
+    >
       <span class="pencil-icon">✎</span>
     </button>
 
     <aside id="shortcut-sidebar" class="shortcut-sidebar">
       <div class="sidebar-header">
         <h3>Customize</h3>
-        <button id="close-sidebar" class="close-sidebar" aria-label="Close sidebar">&times;</button>
+        <button
+          id="close-sidebar"
+          class="close-sidebar"
+          aria-label="Close sidebar"
+        >
+          &times;
+        </button>
       </div>
-      
+
       <div class="sidebar-content">
         <section class="sidebar-section">
           <h4>Hidden</h4>
@@ -36,9 +49,11 @@
           <div id="suggestions-list" class="sidebar-list"></div>
         </section>
 
-        <button id="add-custom-shortcut" class="add-custom-btn">+ Add Custom Link</button>
+        <button id="add-custom-shortcut" class="add-custom-btn">
+          + Add Custom Link
+        </button>
       </div>
-      
+
       <button id="save-layout" class="save-layout">Done</button>
     </aside>
 
@@ -46,8 +61,12 @@
     <div id="custom-link-modal" class="modal">
       <div class="modal-content">
         <h4>New Destination</h4>
-        <input type="text" id="new-link-label" placeholder="Label (e.g. Portfolio)">
-        <input type="text" id="new-link-url" placeholder="URL (https://...)">
+        <input
+          type="text"
+          id="new-link-label"
+          placeholder="Label (e.g. Portfolio)"
+        />
+        <input type="text" id="new-link-url" placeholder="URL (https://...)" />
         <div class="modal-actions">
           <button id="cancel-modal">Cancel</button>
           <button id="confirm-modal">Add</button>
@@ -61,14 +80,52 @@
 
         <form id="search-form" class="search" aria-label="Search">
           <div class="engine-selector">
-            <button type="button" id="current-engine" class="current-engine">G</button>
+            <button type="button" id="current-engine" class="current-engine">
+              G
+            </button>
             <div id="engine-dropdown" class="engine-dropdown">
-              <div class="engine-option" data-engine="google" data-url="https://www.google.com/search?q=">Google</div>
-              <div class="engine-option" data-engine="duckduckgo" data-url="https://duckduckgo.com/?q=">DuckDuckGo</div>
-              <div class="engine-option" data-engine="chatgpt" data-url="https://chatgpt.com/?q=">ChatGPT</div>
-              <div class="engine-option" data-engine="perplexity" data-url="https://www.perplexity.ai/search/new?q=">Perplexity</div>
-              <div class="engine-option" data-engine="gemini" data-url="https://gemini.google.com/app?q=">Gemini</div>
-              <div class="engine-option" data-engine="groq" data-url="https://groq.com/?q=">Groq</div>
+              <div
+                class="engine-option"
+                data-engine="google"
+                data-url="https://www.google.com/search?q="
+              >
+                <span class="engine-icon">G</span> Google
+              </div>
+              <div
+                class="engine-option"
+                data-engine="duckduckgo"
+                data-url="https://duckduckgo.com/?q="
+              >
+                <span class="engine-icon">D</span> DuckDuckGo
+              </div>
+              <div
+                class="engine-option"
+                data-engine="chatgpt"
+                data-url="https://chatgpt.com/?q="
+              >
+                <span class="engine-icon">◎</span> ChatGPT
+              </div>
+              <div
+                class="engine-option"
+                data-engine="perplexity"
+                data-url="https://www.perplexity.ai/search/new?q="
+              >
+                <span class="engine-icon">◇</span> Perplexity
+              </div>
+              <div
+                class="engine-option"
+                data-engine="gemini"
+                data-url="https://gemini.google.com/app?q="
+              >
+                <span class="engine-icon">✦</span> Gemini
+              </div>
+              <div
+                class="engine-option"
+                data-engine="groq"
+                data-url="https://groq.com/?q="
+              >
+                <span class="engine-icon">∅</span> Groq
+              </div>
             </div>
           </div>
           <span class="search-divider" aria-hidden="true"></span>
@@ -83,43 +140,83 @@
         <p id="search-hint" class="search-hint" aria-live="polite"></p>
 
         <section class="quick-links" aria-label="Quick links">
-          <a class="quick-link" href="https://www.google.com/" data-keywords="google search web">
+          <a
+            class="quick-link"
+            href="https://www.google.com/"
+            data-keywords="google search web"
+          >
             <span class="brand google">G</span>
             <span class="label">Google</span>
           </a>
-          <a class="quick-link" href="https://www.perplexity.ai/" data-keywords="perplexity ai search">
+          <a
+            class="quick-link"
+            href="https://www.perplexity.ai/"
+            data-keywords="perplexity ai search"
+          >
             <span class="brand perplexity">◇</span>
             <span class="label">Perplexity</span>
           </a>
-          <a class="quick-link" href="https://chatgpt.com/" data-keywords="openai chatgpt ai">
+          <a
+            class="quick-link"
+            href="https://chatgpt.com/"
+            data-keywords="openai chatgpt ai"
+          >
             <span class="brand chatgpt">◎</span>
             <span class="label">ChatGPT</span>
           </a>
-          <a class="quick-link" href="https://claude.ai/" data-keywords="anthropic claude ai">
+          <a
+            class="quick-link"
+            href="https://claude.ai/"
+            data-keywords="anthropic claude ai"
+          >
             <span class="brand claude">✹</span>
             <span class="label">Claude</span>
           </a>
-          <a class="quick-link" href="https://gemini.google.com/" data-keywords="google gemini ai">
+          <a
+            class="quick-link"
+            href="https://gemini.google.com/"
+            data-keywords="google gemini ai"
+          >
             <span class="brand gemini">✦</span>
             <span class="label">Gemini</span>
           </a>
-          <a class="quick-link" href="https://grok.com/" data-keywords="grok xai ai">
+          <a
+            class="quick-link"
+            href="https://grok.com/"
+            data-keywords="grok xai ai"
+          >
             <span class="brand grok">∅</span>
             <span class="label">Grok</span>
           </a>
-          <a class="quick-link" href="https://github.com/" data-keywords="github code">
+          <a
+            class="quick-link"
+            href="https://github.com/"
+            data-keywords="github code"
+          >
             <span class="brand github">GH</span>
             <span class="label">GitHub</span>
           </a>
-          <a class="quick-link" href="https://vercel.com/dashboard" data-keywords="vercel deploy">
+          <a
+            class="quick-link"
+            href="https://vercel.com/dashboard"
+            data-keywords="vercel deploy"
+          >
             <span class="brand vercel">▲</span>
             <span class="label">Vercel</span>
           </a>
-          <a class="quick-link" href="https://www.pinterest.com/" data-keywords="pinterest design">
+          <a
+            class="quick-link"
+            href="https://www.pinterest.com/"
+            data-keywords="pinterest design"
+          >
             <span class="brand pinterest">P</span>
             <span class="label">Pinterest</span>
           </a>
-          <a class="quick-link" href="https://login.salesforce.com/" data-keywords="salesforce login">
+          <a
+            class="quick-link"
+            href="https://login.salesforce.com/"
+            data-keywords="salesforce login"
+          >
             <span class="brand salesforce">SF</span>
             <span class="label">Salesforce</span>
           </a>
@@ -132,24 +229,49 @@
             <span class="label">Website</span>
           </a>
         </section>
-
+      </section>
     </main>
 
     <footer class="footer">
-      Created by <a href="https://sfdcnaveen.github.io/naveen-contact-card/" target="_blank" rel="noopener noreferrer">Naveen</a>
+      Created by
+      <a
+        href="https://sfdcnaveen.github.io/naveen-contact-card/"
+        target="_blank"
+        rel="noopener noreferrer"
+        >Naveen</a
+      >
     </footer>
 
     <div id="onboarding-overlay" class="onboarding-overlay">
       <div class="onboarding-card active" data-step="1">
-        <p class="poetic-prompt">A new day, a blank page.<br>Who shall write the story today?</p>
-        <input type="text" id="name-input" placeholder="Your name..." autocomplete="off">
+        <p class="poetic-prompt">
+          A new day, a blank page.<br />Who shall write the story today?
+        </p>
+        <input
+          type="text"
+          id="name-input"
+          placeholder="Your name..."
+          autocomplete="off"
+        />
         <button class="next-step">Next</button>
       </div>
       <div class="onboarding-card" data-step="2">
-        <p class="poetic-prompt">Would you like to configure<br>your favorite destinations?</p>
+        <p class="poetic-prompt">
+          Would you like to configure<br />your favorite destinations?
+        </p>
         <div class="url-inputs">
-          <input type="text" id="custom-url-1" placeholder="Custom URL 1 (optional)" autocomplete="off">
-          <input type="text" id="custom-url-2" placeholder="Custom URL 2 (optional)" autocomplete="off">
+          <input
+            type="text"
+            id="custom-url-1"
+            placeholder="Custom URL 1 (optional)"
+            autocomplete="off"
+          />
+          <input
+            type="text"
+            id="custom-url-2"
+            placeholder="Custom URL 2 (optional)"
+            autocomplete="off"
+          />
         </div>
         <div class="onboarding-actions">
           <button id="skip-urls" class="skip-btn">Skip</button>

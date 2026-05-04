@@ -11,11 +11,13 @@ const checks = [
   ["index.html", "login.salesforce.com"],
   ["app.js", "homeProfileName"],
   ["app.js", "searchUrl"],
-  ["styles.css", "backdrop-filter"]
+  ["styles.css", "backdrop-filter"],
 ];
 
 const contents = Object.fromEntries(
-  await Promise.all(files.map(async (file) => [file, await readFile(file, "utf8")]))
+  await Promise.all(
+    files.map(async (file) => [file, await readFile(file, "utf8")]),
+  ),
 );
 
 for (const [file, needle] of checks) {

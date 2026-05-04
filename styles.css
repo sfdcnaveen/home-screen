@@ -17,7 +17,8 @@
   -webkit-font-smoothing: antialiased;
 }
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   min-height: 100vh;
@@ -28,9 +29,17 @@ html, body {
 }
 
 body {
-  background: 
-    radial-gradient(circle at 50% -20%, rgba(255, 255, 255, 0.05) 0%, transparent 50%),
-    radial-gradient(circle at 50% 120%, rgba(255, 255, 255, 0.02) 0%, transparent 50%),
+  background:
+    radial-gradient(
+      circle at 50% -20%,
+      rgba(255, 255, 255, 0.05) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 50% 120%,
+      rgba(255, 255, 255, 0.02) 0%,
+      transparent 50%
+    ),
     #050505;
 }
 
@@ -76,7 +85,7 @@ body.edit-mode .edit-mode-toggle {
   display: flex;
   flex-direction: column;
   transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: -20px 0 50px rgba(0,0,0,0.5);
+  box-shadow: -20px 0 50px rgba(0, 0, 0, 0.5);
 }
 
 .shortcut-sidebar.active {
@@ -267,7 +276,7 @@ body.edit-mode .edit-mode-toggle {
   padding: 2rem;
   width: 90%;
   max-width: 400px;
-  box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
 }
 
 .modal-content h4 {
@@ -302,8 +311,14 @@ body.edit-mode .edit-mode-toggle {
   font-weight: 600;
 }
 
-#cancel-modal { background: rgba(255,255,255,0.05); color: var(--text-strong); }
-#confirm-modal { background: #fff; color: #000; }
+#cancel-modal {
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--text-strong);
+}
+#confirm-modal {
+  background: #fff;
+  color: #000;
+}
 
 /* Home Layout */
 .home {
@@ -342,7 +357,7 @@ h1 {
 .user-name {
   font-family: var(--font-ink);
   color: #fff;
-  filter: drop-shadow(0 0 15px rgba(255,255,255,0.2));
+  filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.2));
 }
 
 /* Footer */
@@ -398,7 +413,7 @@ body.edit-mode .footer {
 
 .quick-link:hover {
   background: rgba(255, 255, 255, 0.06);
-  border-color: rgba(255,255,255,0.15);
+  border-color: rgba(255, 255, 255, 0.15);
   transform: translateY(-2px);
 }
 
@@ -412,9 +427,18 @@ body.edit-mode .footer {
   border-radius: 4px;
 }
 
-.brand { font-size: 0.9rem; font-weight: 700; }
-.label { font-size: 0.85rem; color: var(--muted); transition: color 0.2s; }
-.quick-link:hover .label { color: #fff; }
+.brand {
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+.label {
+  font-size: 0.85rem;
+  color: var(--muted);
+  transition: color 0.2s;
+}
+.quick-link:hover .label {
+  color: #fff;
+}
 
 .remove-shortcut {
   position: absolute;
@@ -435,19 +459,32 @@ body.edit-mode .footer {
   box-shadow: 0 4px 10px rgba(255, 59, 48, 0.3);
 }
 
-body.edit-mode .remove-shortcut { display: flex; }
-body.edit-mode .quick-link { animation: shake 0.3s infinite; }
+body.edit-mode .remove-shortcut {
+  display: flex;
+}
+body.edit-mode .quick-link {
+  animation: shake 0.3s infinite;
+}
 
 @keyframes shake {
-  0% { transform: rotate(0deg); }
-  25% { transform: rotate(0.6deg); }
-  75% { transform: rotate(-0.6deg); }
-  100% { transform: rotate(0deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(0.6deg);
+  }
+  75% {
+    transform: rotate(-0.6deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
 }
 
 /* Search Bar */
 .search {
   position: relative;
+  z-index: 1001;
   display: flex;
   align-items: center;
   width: 100%;
@@ -458,12 +495,12 @@ body.edit-mode .quick-link { animation: shake 0.3s infinite; }
   backdrop-filter: blur(40px);
   border: 1px solid var(--glass-border);
   border-radius: 20px;
-  transition: transform 0.3s;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .search:focus-within {
   transform: scale(1.01);
-  border-color: rgba(255,255,255,0.15);
+  border-color: rgba(255, 255, 255, 0.15);
 }
 
 .current-engine {
@@ -477,25 +514,60 @@ body.edit-mode .quick-link { animation: shake 0.3s infinite; }
 
 .engine-dropdown {
   position: absolute;
-  top: calc(100% + 12px);
+  top: 100%;
   left: 0;
-  width: 190px;
-  background: rgba(12, 12, 12, 0.98);
-  backdrop-filter: blur(40px);
-  border: 1px solid var(--glass-border);
+  width: 210px;
+  margin-top: 10px;
+  background: #000000;
+  border: 1px solid rgba(255, 255, 255, 0.15);
   border-radius: 16px;
-  padding: 0.5rem;
+  padding: 0.6rem;
   opacity: 0;
   visibility: hidden;
-  transform: translateY(-10px);
-  transition: all 0.2s ease;
-  z-index: 100;
+  transform: translateY(10px);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 10000;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 1);
+  pointer-events: auto;
+  user-select: none;
 }
 
+.engine-selector:hover .engine-dropdown:not(.force-hidden),
 .engine-dropdown.active {
   opacity: 1;
   visibility: visible;
   transform: translateY(0);
+}
+
+/* Background locking when dropdown is open */
+body.dropdown-active::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  z-index: 1000;
+  animation: backdropFadeIn 0.3s ease forwards;
+  pointer-events: none;
+}
+
+@keyframes backdropFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+body.dropdown-active .quick-link,
+body.dropdown-active .edit-mode-toggle,
+body.dropdown-active .footer,
+body.dropdown-active #greeting,
+body.dropdown-active #search-input {
+  pointer-events: none;
+  opacity: 0.4;
+  transition: all 0.3s ease;
 }
 
 .engine-option {
@@ -504,12 +576,28 @@ body.edit-mode .quick-link { animation: shake 0.3s infinite; }
   cursor: pointer;
   font-size: 0.9rem;
   color: var(--text);
-  transition: background 0.2s;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .engine-option:hover {
   background: rgba(255, 255, 255, 0.08);
   color: #fff;
+}
+
+.engine-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 6px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-strong);
 }
 
 .search input {
@@ -523,25 +611,26 @@ body.edit-mode .quick-link { animation: shake 0.3s infinite; }
 }
 
 @media (max-width: 768px) {
-  body.edit-mode .home, body.edit-mode .footer {
+  body.edit-mode .home,
+  body.edit-mode .footer {
     padding-right: 0;
   }
-  
+
   .shortcut-sidebar {
     width: 100%;
     right: -100%;
   }
-  
+
   h1 {
     flex-direction: column;
     align-items: center;
     gap: 0.2rem;
   }
-  
+
   .user-name {
     margin-top: 0.2rem;
   }
-  
+
   .edit-mode-toggle {
     top: 1rem;
     right: 1rem;
@@ -580,8 +669,14 @@ body.edit-mode .quick-link { animation: shake 0.3s infinite; }
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .poetic-prompt {
