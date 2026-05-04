@@ -212,6 +212,7 @@ function hideShortcut(label) {
     hidden.push(label);
     localStorage.setItem("hiddenShortcuts", JSON.stringify(hidden));
     updateShortcutVisibility();
+    if (window.gtag) gtag("event", "remove_shortcut", { label: label });
   }
 }
 
@@ -220,6 +221,7 @@ function showShortcut(label) {
   hidden = hidden.filter((l) => l !== label);
   localStorage.setItem("hiddenShortcuts", JSON.stringify(hidden));
   updateShortcutVisibility();
+  if (window.gtag) gtag("event", "add_shortcut", { label: label, type: "restore" });
 }
 
 function addCustomShortcut(label, url) {
@@ -227,6 +229,7 @@ function addCustomShortcut(label, url) {
   custom.push({ label, url });
   localStorage.setItem("customShortcuts", JSON.stringify(custom));
   updateShortcutVisibility();
+  if (window.gtag) gtag("event", "add_shortcut", { label: label, type: "custom" });
 }
 
 function toggleEditMode() {
@@ -236,8 +239,10 @@ function toggleEditMode() {
 
   if (isEditMode) {
     viewportMeta.setAttribute("content", "width=1200");
+    if (window.gtag) gtag("event", "open_customize");
   } else {
     viewportMeta.setAttribute("content", "width=device-width, initial-scale=1.0");
+    if (window.gtag) gtag("event", "save_customization");
   }
 }
 
@@ -255,6 +260,7 @@ document.querySelector("#skip-urls").addEventListener("click", () => {
   onboardingOverlay.classList.remove("active");
   updateGreeting();
   updateShortcutVisibility();
+  if (window.gtag) gtag("event", "onboarding_complete", { method: "skip" });
 });
 
 document.querySelector("#save-onboarding").addEventListener("click", () => {
@@ -266,6 +272,7 @@ document.querySelector("#save-onboarding").addEventListener("click", () => {
   onboardingOverlay.classList.remove("active");
   updateGreeting();
   updateShortcutVisibility();
+  if (window.gtag) gtag("event", "onboarding_complete", { method: "save_urls" });
 });
 
 // Modal Logic
