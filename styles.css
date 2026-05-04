@@ -69,7 +69,6 @@ body.edit-mode .edit-mode-toggle {
   pointer-events: none;
   transform: scale(0.8);
 }
-
 /* Sidebar */
 .shortcut-sidebar {
   position: fixed;
@@ -80,7 +79,7 @@ body.edit-mode .edit-mode-toggle {
   background: rgba(8, 8, 8, 0.95);
   backdrop-filter: blur(40px) saturate(180%);
   border-left: 1px solid var(--glass-border);
-  z-index: 1000;
+  z-index: 5000;
   padding: 0;
   display: flex;
   flex-direction: column;
@@ -617,8 +616,9 @@ body.dropdown-active #search-input {
   }
 
   .shortcut-sidebar {
-    width: 100%;
-    right: -100%;
+    width: 85%;
+    right: -85%;
+    z-index: 6000; /* Even higher on mobile to ensure it covers search */
   }
 
   h1 {

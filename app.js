@@ -27,6 +27,7 @@ const newLinkLabel = document.querySelector("#new-link-label");
 const newLinkUrl = document.querySelector("#new-link-url");
 const cancelModalBtn = document.querySelector("#cancel-modal");
 const confirmModalBtn = document.querySelector("#confirm-modal");
+const viewportMeta = document.querySelector("#viewport");
 
 let currentEngineUrl = "https://www.google.com/search?q=";
 let isEditMode = false;
@@ -232,6 +233,12 @@ function toggleEditMode() {
   isEditMode = !isEditMode;
   document.body.classList.toggle("edit-mode", isEditMode);
   shortcutSidebar.classList.toggle("active", isEditMode);
+
+  if (isEditMode) {
+    viewportMeta.setAttribute("content", "width=1200");
+  } else {
+    viewportMeta.setAttribute("content", "width=device-width, initial-scale=1.0");
+  }
 }
 
 // Onboarding logic
