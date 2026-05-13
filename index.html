@@ -29,12 +29,75 @@
   </head>
   <body>
     <button
+      id="features-toggle"
+      class="features-toggle"
+      aria-label="Open features"
+    >
+      <span class="features-icon">◈</span>
+    </button>
+
+    <button
       id="edit-mode-toggle"
       class="edit-mode-toggle"
       aria-label="Toggle edit mode"
     >
       <span class="pencil-icon">✎</span>
     </button>
+
+    <aside id="features-sidebar" class="shortcut-sidebar features-sidebar">
+      <div class="sidebar-header">
+        <h3>Toolkit</h3>
+        <button
+          id="close-features"
+          class="close-sidebar"
+          aria-label="Close features"
+        >
+          &times;
+        </button>
+      </div>
+
+      <div class="sidebar-content">
+        <section class="sidebar-section">
+          <h4>Smart Search</h4>
+          <div class="feature-item">
+            <div class="feature-info">
+              <span class="feature-title">Search Aliases</span>
+              <span class="feature-desc">Use 'gpt', 'ppx', or 'amz' prefixes</span>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="toggle-aliases" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+        </section>
+
+        <section class="sidebar-section">
+          <h4>View Modes</h4>
+          <div class="feature-item">
+            <div class="feature-info">
+              <span class="feature-title">Focus Mode</span>
+              <span class="feature-desc">Hide quick links for less distraction</span>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="toggle-focus-mode">
+              <span class="slider"></span>
+            </label>
+          </div>
+          <div class="feature-item">
+            <div class="feature-info">
+              <span class="feature-title">Glassmorphism</span>
+              <span class="feature-desc">Extra frosted glass effects</span>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="toggle-glass" checked>
+              <span class="slider"></span>
+            </label>
+          </div>
+        </section>
+
+      </div>
+      <button id="save-features" class="save-layout">Done</button>
+    </aside>
 
     <aside id="shortcut-sidebar" class="shortcut-sidebar">
       <div class="sidebar-header">
@@ -145,6 +208,7 @@
             type="search"
             autocomplete="off"
             placeholder="Search anything..."
+            autofocus
           />
         </form>
         <p id="search-hint" class="search-hint" aria-live="polite"></p>

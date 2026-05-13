@@ -69,6 +69,132 @@ body.edit-mode .edit-mode-toggle {
   pointer-events: none;
   transform: scale(0.8);
 }
+/* Features Toggle (Top Left) */
+.features-toggle {
+  position: fixed;
+  top: 1.5rem;
+  left: 1.5rem;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid var(--glass-border);
+  color: var(--text-strong);
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  backdrop-filter: blur(10px);
+}
+
+.features-toggle:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
+}
+
+.features-sidebar {
+  left: calc(-1 * var(--sidebar-width));
+  right: auto;
+  border-left: none;
+  border-right: 1px solid var(--glass-border);
+  box-shadow: 20px 0 50px rgba(0, 0, 0, 0.5);
+}
+
+.features-sidebar.active {
+  left: 0;
+}
+
+/* Feature Items */
+.feature-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 16px;
+  border: 1px solid var(--glass-border);
+  margin-bottom: 0.75rem;
+}
+
+.feature-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+
+.feature-title {
+  font-size: 0.9rem;
+  color: var(--text-strong);
+  font-weight: 500;
+}
+
+.feature-desc {
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+
+/* Toggle Switch */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 22px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background-color: rgba(255, 255, 255, 0.1);
+  transition: 0.4s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 16px;
+  width: 16px;
+  left: 3px;
+  bottom: 3px;
+  background-color: var(--text-strong);
+  transition: 0.4s;
+  border-radius: 50%;
+}
+
+input:checked + .slider {
+  background-color: #fff;
+}
+
+input:checked + .slider:before {
+  transform: translateX(18px);
+  background-color: #000;
+}
+
+/* Feature States */
+body.focus-mode .quick-links,
+body.focus-mode .search-hint {
+  opacity: 0;
+  pointer-events: none;
+  transform: translateY(20px);
+  transition: all 0.5s ease;
+}
+
+body.extra-glass .search,
+body.extra-glass .quick-link {
+  backdrop-filter: blur(60px);
+  background: rgba(255, 255, 255, 0.08);
+}
+
 /* Sidebar */
 .shortcut-sidebar {
   position: fixed;

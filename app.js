@@ -29,8 +29,28 @@ const cancelModalBtn = document.querySelector("#cancel-modal");
 const confirmModalBtn = document.querySelector("#confirm-modal");
 const viewportMeta = document.querySelector("#viewport");
 
+const featuresToggle = document.querySelector("#features-toggle");
+const featuresSidebar = document.querySelector("#features-sidebar");
+const closeFeaturesBtn = document.querySelector("#close-features");
+const saveFeaturesBtn = document.querySelector("#save-features");
+
+const toggleAliases = document.querySelector("#toggle-aliases");
+const toggleFocusMode = document.querySelector("#toggle-focus-mode");
+const toggleGlass = document.querySelector("#toggle-glass");
+
 let currentEngineUrl = "https://www.google.com/search?q=";
 let isEditMode = false;
+let isFeaturesMode = false;
+
+const SEARCH_ALIASES = {
+  gpt: { name: "ChatGPT", url: "https://chatgpt.com/?q=" },
+  ppx: { name: "Perplexity", url: "https://www.perplexity.ai/search/new?q=" },
+  amz: { name: "Amazon", url: "https://www.amazon.com/s?k=" },
+  yt: { name: "YouTube", url: "https://www.youtube.com/results?search_query=" },
+  cl: { name: "Claude", url: "https://claude.ai/new?q=" },
+  gem: { name: "Gemini", url: "https://gemini.google.com/app?q=" },
+  g: { name: "Google", url: "https://www.google.com/search?q=" },
+};
 
 const SUGGESTIONS = [
   { label: "Gmail", url: "https://mail.google.com" },
@@ -65,11 +85,13 @@ function updateGreeting() {
   if (!name) {
     onboardingOverlay.classList.add("active");
     greetingEl.innerHTML = `${prefix}.`;
+    setTimeout(() => nameInput.focus(), 100);
     return;
   }
 
   onboardingOverlay.classList.remove("active");
   greetingEl.innerHTML = `<span>${prefix},</span> <span class="user-name">${name}</span>`;
+  setTimeout(() => searchInput.focus(), 100);
 }
 
 function getFavicon(url) {
@@ -236,6 +258,7 @@ function toggleEditMode() {
   isEditMode = !isEditMode;
   document.body.classList.toggle("edit-mode", isEditMode);
   shortcutSidebar.classList.toggle("active", isEditMode);
+  if (isEditMode && isFeaturesMode) toggleFeaturesMode();
 
   if (isEditMode) {
     viewportMeta.setAttribute("content", "width=1200");
@@ -243,7 +266,38 @@ function toggleEditMode() {
   } else {
     viewportMeta.setAttribute("content", "width=device-width, initial-scale=1.0");
     if (window.gtag) gtag("event", "save_customization");
+    setTimeout(() => searchInput.focus(), 100);
   }
+}
+
+function toggleFeaturesMode() {
+  isFeaturesMode = !isFeaturesMode;
+  featuresSidebar.classList.toggle("active", isFeaturesMode);
+  if (isFeaturesMode && isEditMode) toggleEditMode();
+  
+  if (!isFeaturesMode) {
+    setTimeout(() => searchInput.focus(), 100);
+  }
+}
+
+function updateFeatureStates() {
+  const states = {
+    aliases: toggleAliases.checked,
+    focusMode: toggleFocusMode.checked,
+    glass: toggleGlass.checked,
+  };
+  localStorage.setItem("featureStates", JSON.stringify(states));
+
+  document.body.classList.toggle("focus-mode", states.focusMode);
+  document.body.classList.toggle("extra-glass", states.glass);
+}
+
+function loadFeatureStates() {
+  const saved = JSON.parse(localStorage.getItem("featureStates") || "{}");
+  if (saved.aliases !== undefined) toggleAliases.checked = saved.aliases;
+  if (saved.focusMode !== undefined) toggleFocusMode.checked = saved.focusMode;
+  if (saved.glass !== undefined) toggleGlass.checked = saved.glass;
+  updateFeatureStates();
 }
 
 // Onboarding logic
@@ -252,6 +306,7 @@ document.querySelector(".next-step").addEventListener("click", () => {
     localStorage.setItem("homeProfileName", nameInput.value.trim());
     onboardingCards[0].classList.remove("active");
     onboardingCards[1].classList.add("active");
+    setTimeout(() => customUrl1Input.focus(), 100);
   }
 });
 
@@ -290,22 +345,41 @@ confirmModalBtn.addEventListener("click", () => {
     customModal.classList.remove("active");
     newLinkLabel.value = "";
     newLinkUrl.value = "";
+    setTimeout(() => searchInput.focus(), 100);
   }
 });
 
 // Search Logic
 searchForm.addEventListener("submit", (e) => {
   e.preventDefault();
-  const query = searchInput.value.trim();
+  let query = searchInput.value.trim();
   if (!query) return;
+
+  let targetUrl = currentEngineUrl;
+
+  // Handle Aliases
+  if (toggleAliases.checked) {
+    const parts = query.split(" ");
+    const alias = parts[0].toLowerCase();
+    if (SEARCH_ALIASES[alias]) {
+      targetUrl = SEARCH_ALIASES[alias].url;
+      query = parts.slice(1).join(" ");
+      if (!query) {
+        window.location.assign(targetUrl.split("?")[0]);
+        return;
+      }
+    }
+  }
+
   const isUrl =
     /^https?:\/\//.test(query) || (query.includes(".") && !query.includes(" "));
+  
   window.location.assign(
     isUrl
       ? query.startsWith("http")
         ? query
         : `https://${query}`
-      : `${currentEngineUrl}${encodeURIComponent(query)}`,
+      : `${targetUrl}${encodeURIComponent(query)}`,
   );
 });
 
@@ -350,7 +424,16 @@ editModeToggle.addEventListener("click", toggleEditMode);
 closeSidebarBtn.addEventListener("click", toggleEditMode);
 saveLayoutBtn.addEventListener("click", toggleEditMode);
 
+featuresToggle.addEventListener("click", toggleFeaturesMode);
+closeFeaturesBtn.addEventListener("click", toggleFeaturesMode);
+saveFeaturesBtn.addEventListener("click", toggleFeaturesMode);
+
+[toggleAliases, toggleFocusMode, toggleGlass].forEach(el => {
+  el.addEventListener("change", updateFeatureStates);
+});
+
 // Init
+loadFeatureStates();
 const savedEngine = localStorage.getItem("preferredSearchEngine");
 if (savedEngine) {
   const opt = engineOptions.find((o) => o.dataset.engine === savedEngine);
