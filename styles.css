@@ -6,9 +6,8 @@
   --muted: rgba(255, 255, 255, 0.35);
   --glass-bg: rgba(255, 255, 255, 0.03);
   --glass-border: rgba(255, 255, 255, 0.06);
-  --font-main: "SF Pro Display", "Inter", sans-serif;
-  --font-bitcount: "Bitcount Grid Double", sans-serif;
-  --font-ink: "Bitcount Ink", sans-serif;
+  --font-main: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-heading: "Outfit", sans-serif;
   --sidebar-width: 340px;
 }
 
@@ -225,7 +224,7 @@ body.extra-glass .quick-link {
 }
 
 .sidebar-header h3 {
-  font-family: var(--font-bitcount);
+  font-family: var(--font-heading);
   font-weight: 400;
   font-size: 1.1rem;
   color: var(--text-strong);
@@ -364,7 +363,7 @@ body.extra-glass .quick-link {
   color: #000;
   border: none;
   border-radius: 14px;
-  font-family: var(--font-bitcount);
+  font-family: var(--font-heading);
   font-weight: 600;
   font-size: 0.95rem;
   cursor: pointer;
@@ -406,7 +405,7 @@ body.extra-glass .quick-link {
 
 .modal-content h4 {
   margin: 0 0 1.5rem;
-  font-family: var(--font-bitcount);
+  font-family: var(--font-heading);
   font-weight: 400;
 }
 
@@ -467,7 +466,7 @@ body.edit-mode .home {
 }
 
 h1 {
-  font-family: var(--font-bitcount);
+  font-family: var(--font-heading);
   font-size: clamp(2.2rem, 6vw, 4rem);
   font-weight: 300;
   line-height: 1.1;
@@ -480,7 +479,7 @@ h1 {
 }
 
 .user-name {
-  font-family: var(--font-ink);
+  font-family: var(--font-heading);
   color: #fff;
   filter: drop-shadow(0 0 15px rgba(255, 255, 255, 0.2));
 }
@@ -806,7 +805,7 @@ body.dropdown-active #search-input {
 }
 
 .poetic-prompt {
-  font-family: var(--font-bitcount);
+  font-family: var(--font-heading);
   font-size: 1.4rem;
   color: var(--text-strong);
   margin-bottom: 2.5rem;
@@ -821,7 +820,7 @@ body.dropdown-active #search-input {
   padding: 1rem;
   color: #fff;
   font-size: 1.8rem;
-  font-family: var(--font-ink);
+  font-family: var(--font-heading);
   text-align: center;
   margin-bottom: 2.5rem;
   outline: none;
@@ -839,7 +838,7 @@ body.dropdown-active #search-input {
   border: none;
   padding: 0.8rem 2.5rem;
   border-radius: 99px;
-  font-family: var(--font-bitcount);
+  font-family: var(--font-heading);
   font-weight: 600;
   cursor: pointer;
 }

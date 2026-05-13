@@ -32,7 +32,6 @@ const viewportMeta = document.querySelector("#viewport");
 const featuresToggle = document.querySelector("#features-toggle");
 const featuresSidebar = document.querySelector("#features-sidebar");
 const closeFeaturesBtn = document.querySelector("#close-features");
-const saveFeaturesBtn = document.querySelector("#save-features");
 
 const toggleAliases = document.querySelector("#toggle-aliases");
 const toggleFocusMode = document.querySelector("#toggle-focus-mode");
@@ -426,7 +425,6 @@ saveLayoutBtn.addEventListener("click", toggleEditMode);
 
 featuresToggle.addEventListener("click", toggleFeaturesMode);
 closeFeaturesBtn.addEventListener("click", toggleFeaturesMode);
-saveFeaturesBtn.addEventListener("click", toggleFeaturesMode);
 
 [toggleAliases, toggleFocusMode, toggleGlass].forEach(el => {
   el.addEventListener("change", updateFeatureStates);
