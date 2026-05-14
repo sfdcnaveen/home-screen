@@ -36,7 +36,7 @@ const closeFeaturesBtn = document.querySelector("#close-features");
 const toggleAliases = document.querySelector("#toggle-aliases");
 const toggleFocusMode = document.querySelector("#toggle-focus-mode");
 const toggleGlass = document.querySelector("#toggle-glass");
-const toggleLightMode = document.querySelector("#toggle-light-mode");
+const themeSwatches = document.querySelectorAll(".theme-swatch");
 
 let currentEngineUrl = "https://www.google.com/search?q=";
 let isEditMode = false;
@@ -351,18 +351,33 @@ function toggleFeaturesMode() {
   }
 }
 
+function setTheme(theme) {
+  // Remove all theme classes
+  document.body.classList.forEach(cls => {
+    if (cls.startsWith('theme-')) document.body.classList.remove(cls);
+  });
+  
+  if (theme && theme !== 'default') {
+    document.body.classList.add(`theme-${theme}`);
+  }
+  
+  // Update active state in UI
+  themeSwatches.forEach(s => s.classList.toggle("active", s.dataset.theme === theme));
+  
+  // Save to localStorage
+  localStorage.setItem("selectedTheme", theme || "default");
+}
+
 function updateFeatureStates() {
   const states = {
     aliases: toggleAliases.checked,
     focusMode: toggleFocusMode.checked,
     glass: toggleGlass.checked,
-    lightMode: toggleLightMode.checked,
   };
   localStorage.setItem("featureStates", JSON.stringify(states));
 
   document.body.classList.toggle("focus-mode", states.focusMode);
   document.body.classList.toggle("extra-glass", states.glass);
-  document.body.classList.toggle("light-mode", states.lightMode);
 }
 
 function loadFeatureStates() {
@@ -370,9 +385,19 @@ function loadFeatureStates() {
   if (saved.aliases !== undefined) toggleAliases.checked = saved.aliases;
   if (saved.focusMode !== undefined) toggleFocusMode.checked = saved.focusMode;
   if (saved.glass !== undefined) toggleGlass.checked = saved.glass;
-  if (saved.lightMode !== undefined) toggleLightMode.checked = saved.lightMode;
+  
+  const savedTheme = localStorage.getItem("selectedTheme") || "default";
+  setTheme(savedTheme);
+  
   updateFeatureStates();
 }
+
+themeSwatches.forEach(swatch => {
+  swatch.addEventListener("click", () => {
+    setTheme(swatch.dataset.theme);
+    if (window.gtag) gtag("event", "change_theme", { theme: swatch.dataset.theme });
+  });
+});
 
 // Onboarding logic
 document.querySelector(".next-step").addEventListener("click", () => {
@@ -507,7 +532,7 @@ saveLayoutBtn.addEventListener("click", () => {
 featuresToggle.addEventListener("click", toggleFeaturesMode);
 closeFeaturesBtn.addEventListener("click", toggleFeaturesMode);
 
-[toggleAliases, toggleFocusMode, toggleGlass, toggleLightMode].forEach(el => {
+[toggleAliases, toggleFocusMode, toggleGlass].forEach(el => {
   el.addEventListener("change", updateFeatureStates);
 });
 
