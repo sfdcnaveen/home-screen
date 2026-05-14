@@ -165,11 +165,11 @@ body.edit-mode .edit-mode-toggle {
   right: auto;
   border-left: none;
   border-right: 1px solid var(--glass-border);
-  box-shadow: 20px 0 50px rgba(0, 0, 0, 0.5);
 }
 
 .features-sidebar.active {
   left: 0;
+  box-shadow: 20px 0 50px rgba(0, 0, 0, 0.5);
 }
 
 /* Feature Items */
@@ -254,6 +254,7 @@ body.focus-mode .search-hint {
   pointer-events: none;
   transform: translateY(20px);
   transition: all 0.5s ease;
+  display: none;
 }
 
 body.extra-glass .search,
@@ -277,11 +278,11 @@ body.extra-glass .quick-link {
   display: flex;
   flex-direction: column;
   transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: -20px 0 50px rgba(0, 0, 0, 0.5);
 }
 
 .shortcut-sidebar.active {
   right: 0;
+  box-shadow: -20px 0 50px rgba(0, 0, 0, 0.5);
 }
 
 .sidebar-header {
@@ -403,6 +404,11 @@ body.extra-glass .quick-link {
 .add-shortcut:hover {
   background: rgba(255, 255, 255, 0.12);
   transform: scale(1.05);
+}
+
+.add-shortcut.remove:hover {
+  background: rgba(255, 59, 48, 0.2);
+  color: #ff453a;
 }
 
 .add-custom-btn {
@@ -884,6 +890,11 @@ body.dropdown-active #search-input {
     z-index: 6000; /* Even higher on mobile to ensure it covers search */
   }
 
+  .features-sidebar {
+    left: -85%;
+    right: auto;
+  }
+
   h1 {
     flex-direction: column;
     align-items: center;
@@ -898,6 +909,24 @@ body.dropdown-active #search-input {
     top: 1rem;
     right: 1rem;
   }
+
+  /* Sleek backdrop for sidebars */
+  body.edit-mode::before,
+  body.features-mode::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 4000;
+    animation: fadeOverlayIn 0.4s ease forwards;
+  }
+}
+
+@keyframes fadeOverlayIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 /* Onboarding Overlay */

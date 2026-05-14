@@ -16,7 +16,7 @@ const customUrl2Input = document.querySelector("#custom-url-2");
 
 const editModeToggle = document.querySelector("#edit-mode-toggle");
 const shortcutSidebar = document.querySelector("#shortcut-sidebar");
-const sidebarList = document.querySelector("#sidebar-list");
+const activeList = document.querySelector("#active-list");
 const suggestionsList = document.querySelector("#suggestions-list");
 const closeSidebarBtn = document.querySelector("#close-sidebar");
 const saveLayoutBtn = document.querySelector("#save-layout");
@@ -41,6 +41,8 @@ const toggleLightMode = document.querySelector("#toggle-light-mode");
 let currentEngineUrl = "https://www.google.com/search?q=";
 let isEditMode = false;
 let isFeaturesMode = false;
+let pendingHiddenShortcuts = [];
+let pendingCustomShortcuts = [];
 
 const SEARCH_ALIASES = {
   gpt: { name: "ChatGPT", url: "https://chatgpt.com/?q=" },
@@ -149,7 +151,6 @@ function updateShortcutVisibility() {
   );
   const onboardedUrls = JSON.parse(localStorage.getItem("customUrls") || "{}");
 
-  // Base links (hardcoded in HTML originally, but we manage them via state now)
   const defaultLinks = [
     { label: "Google", url: "https://www.google.com" },
     { label: "Perplexity", url: "https://www.perplexity.ai" },
@@ -163,7 +164,6 @@ function updateShortcutVisibility() {
     { label: "Salesforce", url: "https://login.salesforce.com" },
   ];
 
-  // Add onboarded if exists
   const onboarded = [];
   if (onboardedUrls.url1)
     onboarded.push({ label: "Custom 1", url: onboardedUrls.url1 });
@@ -172,7 +172,6 @@ function updateShortcutVisibility() {
 
   const allPossible = [...defaultLinks, ...onboarded, ...customShortcuts];
 
-  // Dedup by label
   const uniqueLinks = [];
   const labels = new Set();
   allPossible.forEach((l) => {
@@ -183,20 +182,59 @@ function updateShortcutVisibility() {
   });
 
   quickLinksContainer.innerHTML = "";
-  sidebarList.innerHTML = "";
-  suggestionsList.innerHTML = "";
 
   uniqueLinks.forEach((link) => {
     const isHidden = hiddenShortcuts.includes(link.label);
-    if (isHidden) {
-      addSidebarItem(link, sidebarList, true);
-    } else {
+    if (!isHidden) {
       const el = createShortcutElement(link.label, link.url);
       quickLinksContainer.appendChild(el);
     }
   });
+}
 
-  // Render Suggestions
+function renderEditSidebar() {
+  const onboardedUrls = JSON.parse(localStorage.getItem("customUrls") || "{}");
+  const defaultLinks = [
+    { label: "Google", url: "https://www.google.com" },
+    { label: "Perplexity", url: "https://www.perplexity.ai" },
+    { label: "ChatGPT", url: "https://chatgpt.com" },
+    { label: "Claude", url: "https://claude.ai" },
+    { label: "Gemini", url: "https://gemini.google.com" },
+    { label: "Grok", url: "https://grok.com" },
+    { label: "GitHub", url: "https://github.com" },
+    { label: "Vercel", url: "https://vercel.com" },
+    { label: "Pinterest", url: "https://www.pinterest.com" },
+    { label: "Salesforce", url: "https://login.salesforce.com" },
+  ];
+
+  const onboarded = [];
+  if (onboardedUrls.url1) onboarded.push({ label: "Custom 1", url: onboardedUrls.url1 });
+  if (onboardedUrls.url2) onboarded.push({ label: "Custom 2", url: onboardedUrls.url2 });
+
+  const allPossible = [...defaultLinks, ...onboarded, ...pendingCustomShortcuts];
+  
+  const uniqueLinks = [];
+  const labels = new Set();
+  allPossible.forEach((l) => {
+    if (!labels.has(l.label)) {
+      uniqueLinks.push(l);
+      labels.add(l.label);
+    }
+  });
+
+  activeList.innerHTML = "";
+  suggestionsList.innerHTML = "";
+
+  uniqueLinks.forEach((link) => {
+    const isHidden = pendingHiddenShortcuts.includes(link.label);
+    if (!isHidden) {
+      addSidebarItem(link, activeList, true);
+    } else {
+      addSidebarItem(link, suggestionsList, false);
+    }
+  });
+
+  // Render more suggestions from the SUGGESTIONS list if not already present
   SUGGESTIONS.forEach((s) => {
     if (!labels.has(s.label)) {
       addSidebarItem(s, suggestionsList, false);
@@ -204,7 +242,7 @@ function updateShortcutVisibility() {
   });
 }
 
-function addSidebarItem(link, container, isHidden) {
+function addSidebarItem(link, container, isVisible) {
   const item = document.createElement("div");
   item.className = "sidebar-item";
   const icon = getFavicon(link.url);
@@ -214,21 +252,42 @@ function addSidebarItem(link, container, isHidden) {
       ${icon ? `<img src="${icon}" alt="">` : `<span class="brand">${link.label[0]}</span>`}
       <span>${link.label}</span>
     </div>
-    <button class="add-shortcut" data-label="${link.label}" data-url="${link.url}">+</button>
+    <button class="add-shortcut ${isVisible ? 'remove' : ''}" data-label="${link.label}" data-url="${link.url}">
+      ${isVisible ? '&times;' : '+'}
+    </button>
   `;
 
-  item.querySelector(".add-shortcut").addEventListener("click", () => {
-    if (isHidden) {
-      showShortcut(link.label);
+  item.querySelector(".add-shortcut").addEventListener("click", (e) => {
+    e.stopPropagation();
+    if (isVisible) {
+      if (!pendingHiddenShortcuts.includes(link.label)) {
+        pendingHiddenShortcuts.push(link.label);
+      }
     } else {
-      addCustomShortcut(link.label, link.url);
+      pendingHiddenShortcuts = pendingHiddenShortcuts.filter(l => l !== link.label);
+      // If it's a new suggestion, add to custom if it's not a default/onboarded link
+      const isDefault = [
+        "Google", "Perplexity", "ChatGPT", "Claude", "Gemini", "Grok", "GitHub", "Vercel", "Pinterest", "Salesforce", "Custom 1", "Custom 2"
+      ].includes(link.label);
+      
+      if (!isDefault && !pendingCustomShortcuts.some(c => c.label === link.label)) {
+        pendingCustomShortcuts.push(link);
+      }
     }
+    renderEditSidebar();
   });
 
   container.appendChild(item);
 }
 
 function hideShortcut(label) {
+  if (isEditMode) {
+    if (!pendingHiddenShortcuts.includes(label)) {
+      pendingHiddenShortcuts.push(label);
+      renderEditSidebar();
+    }
+    return;
+  }
   const hidden = JSON.parse(localStorage.getItem("hiddenShortcuts") || "[]");
   if (!hidden.includes(label)) {
     hidden.push(label);
@@ -239,6 +298,11 @@ function hideShortcut(label) {
 }
 
 function showShortcut(label) {
+  if (isEditMode) {
+    pendingHiddenShortcuts = pendingHiddenShortcuts.filter((l) => l !== label);
+    renderEditSidebar();
+    return;
+  }
   let hidden = JSON.parse(localStorage.getItem("hiddenShortcuts") || "[]");
   hidden = hidden.filter((l) => l !== label);
   localStorage.setItem("hiddenShortcuts", JSON.stringify(hidden));
@@ -247,6 +311,12 @@ function showShortcut(label) {
 }
 
 function addCustomShortcut(label, url) {
+  if (isEditMode) {
+    pendingCustomShortcuts.push({ label, url });
+    pendingHiddenShortcuts = pendingHiddenShortcuts.filter(l => l !== label);
+    renderEditSidebar();
+    return;
+  }
   const custom = JSON.parse(localStorage.getItem("customShortcuts") || "[]");
   custom.push({ label, url });
   localStorage.setItem("customShortcuts", JSON.stringify(custom));
@@ -261,11 +331,11 @@ function toggleEditMode() {
   if (isEditMode && isFeaturesMode) toggleFeaturesMode();
 
   if (isEditMode) {
-    viewportMeta.setAttribute("content", "width=1200");
+    pendingHiddenShortcuts = JSON.parse(localStorage.getItem("hiddenShortcuts") || "[]");
+    pendingCustomShortcuts = JSON.parse(localStorage.getItem("customShortcuts") || "[]");
+    renderEditSidebar();
     if (window.gtag) gtag("event", "open_customize");
   } else {
-    viewportMeta.setAttribute("content", "width=device-width, initial-scale=1.0");
-    if (window.gtag) gtag("event", "save_customization");
     setTimeout(() => searchInput.focus(), 100);
   }
 }
@@ -273,6 +343,7 @@ function toggleEditMode() {
 function toggleFeaturesMode() {
   isFeaturesMode = !isFeaturesMode;
   featuresSidebar.classList.toggle("active", isFeaturesMode);
+  document.body.classList.toggle("features-mode", isFeaturesMode);
   if (isFeaturesMode && isEditMode) toggleEditMode();
   
   if (!isFeaturesMode) {
@@ -425,13 +496,29 @@ engineSelector.addEventListener("mouseleave", () => {
 
 editModeToggle.addEventListener("click", toggleEditMode);
 closeSidebarBtn.addEventListener("click", toggleEditMode);
-saveLayoutBtn.addEventListener("click", toggleEditMode);
+saveLayoutBtn.addEventListener("click", () => {
+  localStorage.setItem("hiddenShortcuts", JSON.stringify(pendingHiddenShortcuts));
+  localStorage.setItem("customShortcuts", JSON.stringify(pendingCustomShortcuts));
+  updateShortcutVisibility();
+  toggleEditMode();
+  if (window.gtag) gtag("event", "save_customization");
+});
 
 featuresToggle.addEventListener("click", toggleFeaturesMode);
 closeFeaturesBtn.addEventListener("click", toggleFeaturesMode);
 
 [toggleAliases, toggleFocusMode, toggleGlass, toggleLightMode].forEach(el => {
   el.addEventListener("change", updateFeatureStates);
+});
+
+// Click outside sidebars to close
+document.addEventListener("click", (e) => {
+  if (isFeaturesMode && !featuresSidebar.contains(e.target) && !featuresToggle.contains(e.target)) {
+    toggleFeaturesMode();
+  }
+  if (isEditMode && !shortcutSidebar.contains(e.target) && !editModeToggle.contains(e.target)) {
+    toggleEditMode();
+  }
 });
 
 // Init
